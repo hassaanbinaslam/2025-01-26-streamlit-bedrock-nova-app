@@ -5,10 +5,8 @@ class Config:
         "name": "Amazon Bedrock - Nova Canvas",
     }
 
-    # If Bedrock is not activated in us-east-1 in your account, set this value
-    # accordingly
+    # If Bedrock is not activated in us-east-1 in your account, set this value accordingly
     BEDROCK_REGION = "us-east-1"
 
-    DEPLOYMENT_REGION = "us-east-1"
-
-    STACK_NAME = "StreamlitApp"
+    # User Auth?
+    LOGIN_REQUIRED = True

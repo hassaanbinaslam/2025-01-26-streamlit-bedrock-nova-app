@@ -18,6 +18,7 @@ import streamlit as st
 
 from pathlib import Path
 from streamlit_cognito_auth import CognitoAuthenticator
+from config import Config
 
 
 # Configure logging
@@ -38,16 +39,21 @@ ICONS = {
 BASE_DIR = Path(".")
 
 # login
-pool_id = os.environ["POOL_ID"]
-app_client_id = os.environ["APP_CLIENT_ID"]
-app_client_secret = os.environ["APP_CLIENT_SECRET"]
+if Config.LOGIN_REQUIRED:
+    pool_id = os.environ["POOL_ID"]
+    app_client_id = os.environ["APP_CLIENT_ID"]
+    app_client_secret = os.environ["APP_CLIENT_SECRET"]
 
-authenticator = CognitoAuthenticator(
-    pool_id=pool_id,
-    app_client_id=app_client_id,
-    app_client_secret=app_client_secret,
-    use_cookies=False,
-)
+    authenticator = CognitoAuthenticator(
+        pool_id=pool_id,
+        app_client_id=app_client_id,
+        app_client_secret=app_client_secret,
+        use_cookies=False,
+    )
+
+    def logout():
+        print("User logged out")
+        authenticator.logout()
 
 
 def initialize_pages():
@@ -123,23 +129,19 @@ def create_navigation_structure(pages):
     }
 
 
-def logout():
-    print("User logged out")
-    authenticator.logout()
-
-
 def main():
     """Main entry point for the application."""
     try:
-        # login required
-        is_logged_in = authenticator.login()
-        if not is_logged_in:
-            st.stop()
+        if Config.LOGIN_REQUIRED:
+            # login
+            is_logged_in = authenticator.login()
+            if not is_logged_in:
+                st.stop()
 
-        # logout button
-        with st.sidebar:
-            st.text(f"Welcome,\n{authenticator.get_username()}")
-            st.button("Logout", "logout_btn", on_click=logout)
+            # logout button
+            with st.sidebar:
+                st.text(f"Welcome,\n{authenticator.get_username()}")
+                st.button("Logout", "logout_btn", on_click=logout)
 
         # Initialize pages
         pages = initialize_pages()
