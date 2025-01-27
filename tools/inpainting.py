@@ -238,10 +238,13 @@ def main():
 
             # Prepare and send request
             body = prepare_request_body(
-                img_buffered, mask_buffered, input["prompt"], input["seed"]
+                img_buffered, mask_buffered, inputs["prompt"], inputs["seed"]
             )
+            print("request prepared")
+
             if body:
                 response_body = invoke_model(body)
+                print("model invoked")
                 if response_body:
                     display_images(response_body)
 
