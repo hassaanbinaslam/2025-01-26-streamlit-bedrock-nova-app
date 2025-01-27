@@ -39,6 +39,7 @@ def display_images(response_body):
         images_data = response_body.get("images", [])
         if not images_data:
             st.error("No images returned from the model. Please try again.")
+            st.error(response_body)
             return
 
         st.subheader("Generated Images:")
